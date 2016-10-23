@@ -54,10 +54,10 @@ my_config.option(option='user', required=True)
 
 #####Params
 ```python
-:param option: <string> <required> Name of the option.
+:param option: <String> <required> Name of the option.
 :param required: <bool> If True the option must be present in the configuration file. Default: False
 :param valid_values: <list> If specified, the option must contain some of these values.
-:param default_value: <string> If value or option are not present this is the default value. Default: None
+:param default_value: <String> If value or option are not present this is the default value. Default: None
 ```
 
 
@@ -77,8 +77,8 @@ my_config.selection(options=['ssh-key', 'password', 'token'], required=True)
 :param options: <list> <required> A list of valid option in the configuration file, one of this options must be present in the configuration file.
 :param required: <bool> If True the option must be present in the configuration file. Default: False
 :param valid_values: :param valid_values: <list> If specified the option must contain some of these values.
-:param default_value:  <string> If value is not present this is the default value. Default: None
-:param default_option:  <string> If option is not present this is the default value. Default: None
+:param default_value:  <String> If value is not present this is the default value. Default: None
+:param default_option:  <String> If option is not present this is the default value. Default: None
 ```
 
 
@@ -99,5 +99,6 @@ If the specified option is not present this will be the default value.
 ```python
 # Expamle
 
+# If option is not present the value will be Administrator
 my_config.option(option='user', required=True, default_value='Administrator')
 ```
