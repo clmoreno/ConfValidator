@@ -3,7 +3,7 @@ setup(
   name='ConfValidator',
   packages=['ConfValidator'],
   install_requires=['configparser'],
-  version='0.1',
+  version='1.0',
   description='ConfValidator is a simple python3 package to easily parse INI style configuration files.',
   author='Carlos Moreno',
   author_email='cmoreno@clmoreno.com',
