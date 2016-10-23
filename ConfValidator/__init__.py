@@ -4,6 +4,10 @@ import configparser
 
 class ConfValidator(object):
     def __init__(self, config_file=None):
+        """
+        ConfValidator is a simple python3 package to easily parse INI style configuration files.
+        :param config_file: configuration file path
+        """
         self.config_file = config_file
         self.expected_config = []
         self.config = []
@@ -18,6 +22,13 @@ class ConfValidator(object):
             raise ImportError("No sections found in config file: " + self.config_file)
 
     def add_option(self, option=None, required=False, valid_values=[], default_value=None):
+        """
+        Add basic option to the expected configuration.
+        :param option: <string> <required> Name of the option.
+        :param required: <bool> If True the option must be present in the configuration file. Default: False
+        :param valid_values: <list> If specified the option must contain some of these values.
+        :param default_value: <string> If value or option are not present this is the default value. Default: None
+        """
         if not option:
             raise ImportError('Option value is needed')
 
@@ -30,6 +41,15 @@ class ConfValidator(object):
         self.expected_config.append(template)
 
     def add_selection(self, options=[], required=False, valid_values=[], default_value=None, default_option=None):
+        """
+        Add a selection to the expected configuration file.
+        :param options: <list> <required> A list of valid option in the configuration file, one of this options must be
+            present in the configuration file.
+        :param required: <bool> If True the option must be present in the configuration file. Default: False
+        :param valid_values: :param valid_values: <list> If specified the option must contain some of these values.
+        :param default_value:  <string> If value is not present this is the default value. Default: None
+        :param default_option:  <string> If option is not present this is the default value. Default: None
+        """
         if not options:
             raise ImportError('Option value is needed')
 
@@ -43,6 +63,10 @@ class ConfValidator(object):
         self.expected_config.append(template)
 
     def validate(self):
+        """
+        Validate and parse the configuration file.
+        :return:
+        """
         for section in self._parser.sections():
             validated_section = {'SectionName': section}
             for config in self.expected_config:
