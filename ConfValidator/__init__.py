@@ -2,7 +2,7 @@ import os
 import configparser
 
 
-class ConfigValidator(object):
+class ConfValidator(object):
     def __init__(self, config_file=None):
         self.config_file = config_file
         self.expected_config = []
