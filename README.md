@@ -32,10 +32,7 @@ my_config.add_option(option='username', required=True)
 my_config.add_selection(options=['password','ssk-key'], required=True)
 
 # Validate the configuration
-try:
-    my_config.validate()
-except Exception as e:
-    exit(e)
+my_config.validate()
 
 # If no errors parsing and validating the configuration file, get resultant dictionary.
 my_config.config
@@ -81,6 +78,30 @@ my_config.selection(options=['ssh-key', 'password', 'token'], required=True)
 :param default_option:  <String> If option is not present this is the default value. Default: None
 ```
 
+
+###validate()
+Method to validate the INI configuration. This method parse and evaluate each section and option to always return a valid dictionary with a valid configuration.
+No argument need.
+No value is returned by this method.
+```python
+# Usage
+
+# Validate configuration
+my_config.validate()
+
+# Get configuration
+print(my_config.conf)
+```
+
+
+###get_conf()
+This method parse validate and returns the configuration dictionary.
+The difference between get_conf() and validate() is that validate() only parse and validate the configuration, get_conf() parse validate and returns the configuration dictionary in one statement. 
+
+```python
+# Usage
+my_config.get_conf()
+```
 
 ###valid_values argument
 Can limit the value in the configuration to allow only one of the specified values.
