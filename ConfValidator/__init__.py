@@ -65,7 +65,6 @@ class ConfValidator(object):
     def validate(self):
         """
         Validate and parse the configuration file.
-        :return:
         """
         for section in self._parser.sections():
             validated_section = {}
@@ -141,5 +140,9 @@ class ConfValidator(object):
             )
 
     def get_conf(self):
+        '''
+        Parse, validate and returns the dictionary with the valid config.
+        :return: <dict> a valid configuration as dictionary
+        '''
         self.validate()
         return self.config
