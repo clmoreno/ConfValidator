@@ -10,7 +10,7 @@ class ConfValidator(object):
         """
         self.config_file = config_file
         self.expected_config = []
-        self.config = []
+        self.config = {}
         self._parser = configparser.ConfigParser()
 
         if not os.path.isfile(self.config_file):
@@ -68,7 +68,7 @@ class ConfValidator(object):
         :return:
         """
         for section in self._parser.sections():
-            validated_section = {'SectionName': section}
+            validated_section = {}
             for config in self.expected_config:
                 validated_option = None
                 validated_value = None
@@ -135,4 +135,7 @@ class ConfValidator(object):
                 elif config["required"]:
                     invalid_opt = str(config["option"]) if "option" in config else str(config["options"])
                     raise ValueError("Missing required configuration: " + invalid_opt)
-            self.config.append(validated_section)
+
+            self.config.update(
+                {section: validated_section}
+            )
