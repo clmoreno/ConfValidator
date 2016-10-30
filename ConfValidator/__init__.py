@@ -134,8 +134,12 @@ class ConfValidator(object):
                     )
                 elif config["required"]:
                     invalid_opt = str(config["option"]) if "option" in config else str(config["options"])
-                    raise ValueError("Missing required configuration: " + invalid_opt)
+                    raise ValueError("Missing required configuration: " + section + ":" + invalid_opt)
 
             self.config.update(
                 {section: validated_section}
             )
+
+    def get_conf(self):
+        self.validate()
+        return self.config
