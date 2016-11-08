@@ -67,13 +67,51 @@ class ConfValidator(object):
         Validate and parse the configuration file.
         """
         for section in self._parser.sections():
-            validated_section = {}
-            for config in self.expected_config:
-                validated_option = None
-                validated_value = None
+            if section != "default":
+                validated_section = {}
+                for config in self.expected_config:
+                    validated_option = None
+                    validated_value = None
 
-                if "options" in config:
-                    for option in config["options"]:
+                    if "options" in config:
+                        for option in config["options"]:
+                            if self._parser.has_option(section, option):
+                                validated_option = option
+                                valid_values = config["valid_values"]
+                                section_value = self._parser[section][option]
+
+                                if not valid_values:
+                                    if section_value:
+                                        validated_value = section_value
+                                        break
+                                    elif config['default_value']:
+                                        validated_value = config['default_value']
+                                        break
+
+                                elif section_value in valid_values:
+                                    validated_value = section_value
+                                    break
+                                else:
+                                    raise ValueError('The specified value is not allowed: ' + option + ': ' + section_value)
+
+                        if not validated_option and config['default_option']:
+                            validated_option = config['default_option']
+
+                        if not validated_value and config['default_value']:
+                            validated_value = config['default_value']
+
+                        if not validated_option and not validated_value:
+                            if config['default_value'] and config['default_option']:
+                                validated_option = config['default_option']
+                                validated_value = config['default_value']
+                            elif self._parser.defaults():
+                                for option in config["options"]:
+                                    if option in self._parser.defaults():
+                                        validated_option = option
+                                        validated_value = self._parser.defaults()[option]
+
+                    else:
+                        option = config["option"]
                         if self._parser.has_option(section, option):
                             validated_option = option
                             valid_values = config["valid_values"]
@@ -82,62 +120,34 @@ class ConfValidator(object):
                             if not valid_values:
                                 if section_value:
                                     validated_value = section_value
-                                    break
                                 elif config['default_value']:
                                     validated_value = config['default_value']
-                                    break
 
                             elif section_value in valid_values:
                                 validated_value = section_value
-                                break
+
                             else:
                                 raise ValueError('The specified value is not allowed: ' + option + ': ' + section_value)
 
-                    if not validated_option and config['default_option']:
-                        validated_option = config['default_option']
-
-                    if not validated_value and config['default_value']:
-                        validated_value = config['default_value']
-
-                    if not validated_option and not validated_value:
-                        if config['default_value'] and config['default_option']:
-                            validated_option = config['default_option']
+                        elif config['default_value']:
+                            validated_option = option
                             validated_value = config['default_value']
 
-                else:
-                    option = config["option"]
-                    if self._parser.has_option(section, option):
-                        validated_option = option
-                        valid_values = config["valid_values"]
-                        section_value = self._parser[section][option]
+                        elif option in self._parser.defaults():
+                            validated_option = option
+                            validated_value = self._parser.defaults()[option]
 
-                        if not valid_values:
-                            if section_value:
-                                validated_value = section_value
-                            elif config['default_value']:
-                                validated_value = config['default_value']
+                    if validated_value and validated_option:
+                        validated_section.update(
+                            {validated_option: validated_value}
+                        )
+                    elif config["required"]:
+                        invalid_opt = str(config["option"]) if "option" in config else str(config["options"])
+                        raise ValueError("Missing required configuration: " + section + ":" + invalid_opt)
 
-                        elif section_value in valid_values:
-                            validated_value = section_value
-
-                        else:
-                            raise ValueError('The specified value is not allowed: ' + option + ': ' + section_value)
-
-                    elif config['default_value']:
-                        validated_option = option
-                        validated_value = config['default_value']
-
-                if validated_value and validated_option:
-                    validated_section.update(
-                        {validated_option: validated_value}
-                    )
-                elif config["required"]:
-                    invalid_opt = str(config["option"]) if "option" in config else str(config["options"])
-                    raise ValueError("Missing required configuration: " + section + ":" + invalid_opt)
-
-            self.config.update(
-                {section: validated_section}
-            )
+                self.config.update(
+                    {section: validated_section}
+                )
 
     def get_conf(self):
         '''
