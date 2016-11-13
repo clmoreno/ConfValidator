@@ -32,7 +32,7 @@ class ConfValidator(object):
         if not option:
             raise ImportError('Option value is needed')
 
-        template ={
+        template = {
             "option": option,
             "required": required,
             "valid_values": valid_values,
