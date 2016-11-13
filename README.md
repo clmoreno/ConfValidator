@@ -123,3 +123,28 @@ If the specified option is not present this will be the default value.
 # If option is not present the value will be Administrator
 my_config.option(option='user', required=True, default_value='Administrator')
 ```
+
+## Default section  *[DEFAULT]*
+
+The default section is designed to put the default values for options in case they are not defined on specific sections.
+ - The values in the *DEFAULT* section overrides the "default_value" and "default_options" in add_option() or add_selection() methods.
+ - The values in sections overrides all the *DEFAULT* values.
+ 
+### Example:
+```INI
+[DEFAULT]
+# This will be used when no authentication is defined
+authentication = ldap
+
+[section1]
+# This section will use the default values ("ldap") because no authentication was specified.
+password = 12345678
+user = test_user
+
+[section2]
+# This authentication explicity speficy the authentication method, so no default authentication will be used.
+authentication = local
+password = 87654321
+user = user_test
+
+```
